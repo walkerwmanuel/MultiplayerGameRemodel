@@ -53,6 +53,7 @@ func (d *Deck) PrintDeck() {
 	fmt.Println()
 }
 
+// Comment
 // NewCard - makes a new card
 func NewCard(v, s string) Card {
 	c := Card{
