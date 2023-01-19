@@ -15,7 +15,7 @@ func NewDeck() *Deck {
 	//Itteration through all 52 types of cards and stores it
 	for i := range suites {
 		for j := range values {
-			d.Cards[index] = NewCard(values[j], suites[i])
+			d.Cards[index] = NewCard(suites[i], values[j])
 			index++
 		}
 	}
@@ -56,8 +56,9 @@ func (d *Deck) PrintDeck() {
 // NewCard - makes a new card
 func NewCard(v, s string) Card {
 	c := Card{
-		Suite: s,
-		Value: v,
+		Suite:  s,
+		Filler: "of",
+		Value:  v,
 	}
 	return c
 }
