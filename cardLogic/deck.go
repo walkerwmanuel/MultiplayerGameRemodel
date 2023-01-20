@@ -53,7 +53,6 @@ func (d *Deck) PrintDeck() {
 	fmt.Println()
 }
 
-// Comment
 // NewCard - makes a new card
 func NewCard(v, s string) Card {
 	c := Card{
@@ -62,4 +61,12 @@ func NewCard(v, s string) Card {
 		Value:  v,
 	}
 	return c
+}
+
+func (d *Deck) Deal() {
+	players := 2
+	x := players
+	for i := 0; i < x; i++ {
+
+	}
 }

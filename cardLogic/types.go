@@ -18,3 +18,7 @@ type Card struct {
 type Deck struct {
 	Cards []Card
 }
+
+type Hand struct {
+	Cards []Card
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"multiplayergame/cardLogic"
+	"multiplayergame/games"
 	"multiplayergame/players"
 	"net/http"
 	"strconv"
@@ -25,14 +26,38 @@ func Routes() {
 		v1.OPTIONS("person", options)
 	}
 
+	gLogic := r.Group("/api/gLogic")
+	{
+		gLogic.GET("addGame", addGame)
+	}
+
 	cLogic := r.Group("/api/cLogic")
 	{
-		cLogic.GET("shuffle", getShuffleDeck)
+		cLogic.GET("getShuffledDeck", getShuffleDeck)
 	}
 
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
 	r.Run()
+}
+
+func addGame(c *gin.Context) {
+
+	//Creates instance of Player struct and names is json
+	var json games.Game
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	success, err := games.AddGame(json)
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{"message": "Success"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
 }
 
 func getPersons(c *gin.Context) {

@@ -3,6 +3,7 @@ package players
 import (
 	"database/sql"
 	"fmt"
+	"multiplayergame/cardLogic"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,7 +15,7 @@ var DB *sql.DB
 
 // Function to open database file
 func ConnectDatabase() error {
-	db, err := sql.Open("sqlite3", "./playerdata.db")
+	db, err := sql.Open("sqlite3", "./data.db")
 	if err != nil {
 		return err
 	}
@@ -25,10 +26,11 @@ func ConnectDatabase() error {
 
 // My struct that uses "playerdata.db" file
 type Player struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	Coins    int    `json:"coins"`
+	Id       int            `json:"id"`
+	Name     string         `json:"name"`
+	Password string         `json:"password"`
+	Coins    int            `json:"coins"`
+	Hand     cardLogic.Hand `json:"hand"`
 }
 
 // Struct from tourtial uses "names.db" file
