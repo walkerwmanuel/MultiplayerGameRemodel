@@ -3,7 +3,6 @@ package players
 import (
 	"database/sql"
 	"fmt"
-	"multiplayergame/cardLogic"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -26,20 +25,11 @@ func ConnectDatabase() error {
 
 // My struct that uses "playerdata.db" file
 type Player struct {
-	Id       int            `json:"id"`
-	Name     string         `json:"name"`
-	Password string         `json:"password"`
-	Coins    int            `json:"coins"`
-	Hand     cardLogic.Hand `json:"hand"`
-}
-
-// Struct from tourtial uses "names.db" file
-type Person struct {
-	Id        int    `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	IpAddress string `json:"ip_address"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Coins    int    `json:"coins"`
+	//Hand     cardLogic.Hand `json:"hand"`
 }
 
 func GetPersons(count int) ([]Player, error) {
@@ -62,6 +52,7 @@ func GetPersons(count int) ([]Player, error) {
 		err = rows.Scan(&singlePerson.Id, &singlePerson.Name, &singlePerson.Password, &singlePerson.Coins)
 
 		if err != nil {
+			fmt.Println("Error here")
 			return nil, err
 		}
 
@@ -139,7 +130,7 @@ func UpdatePerson(ourPlayer Player) (bool, error) {
 		return false, err
 	}
 
-	stmt, err := tx.Prepare(fmt.Sprintf("UPDATE people SET name = ?, password = ?, coins = ? WHERE Id = ?"))
+	stmt, err := tx.Prepare(("UPDATE people SET name = ?, password = ?, coins = ? WHERE Id = ?"))
 
 	if err != nil {
 		return false, err

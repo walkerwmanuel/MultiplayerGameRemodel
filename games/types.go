@@ -3,6 +3,6 @@ package games
 import "multiplayergame/players"
 
 type Game struct {
-	GameId  int
+	Id      int
 	Players []players.Player
 }

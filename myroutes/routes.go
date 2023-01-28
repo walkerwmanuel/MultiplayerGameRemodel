@@ -18,17 +18,18 @@ func Routes() {
 	// API v1
 	v1 := r.Group("/api/v1")
 	{
-		v1.GET("person", getPersons)
-		v1.GET("person/:id", getPersonById)
-		v1.POST("person", addPerson)
-		v1.PUT("person/:id", updatePerson)
-		v1.DELETE("person/:id", deletePerson)
-		v1.OPTIONS("person", options)
+		v1.GET("players", getPersons)
+		v1.GET("players/:id", getPersonById)
+		v1.POST("players", addPerson)
+		v1.PUT("players/:id", updatePerson)
+		v1.DELETE("players/:id", deletePerson)
+		v1.OPTIONS("players", options)
 	}
 
 	gLogic := r.Group("/api/gLogic")
 	{
-		gLogic.GET("addGame", addGame)
+		gLogic.POST("addGame", addGame)
+		gLogic.GET("getGame", getGame)
 	}
 
 	cLogic := r.Group("/api/cLogic")
@@ -60,7 +61,20 @@ func addGame(c *gin.Context) {
 	}
 }
 
+func getGame(c *gin.Context) {
+	games, err := games.GetGame(10)
+	CheckErr(err)
+
+	if games == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No Records Found"})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": games})
+	}
+}
+
 func getPersons(c *gin.Context) {
+
 	persons, err := players.GetPersons(10)
 	CheckErr(err)
 
