@@ -29,15 +29,6 @@ var SqliteDB *sql.DB
 // }
 
 // Function to open database file
-func ConnectDatabase() error {
-	db, err := sql.Open("sqlite3", "./data.db")
-	if err != nil {
-		return err
-	}
-
-	DB = db
-	return nil
-}
 
 func AddGame(newGame Game) (bool, error) {
 

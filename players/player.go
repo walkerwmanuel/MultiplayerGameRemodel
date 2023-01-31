@@ -13,15 +13,6 @@ const PlayerTableName = "players"
 var DB *sql.DB
 
 // Function to open database file
-func ConnectDatabase() error {
-	db, err := sql.Open("sqlite3", "./data.db")
-	if err != nil {
-		return err
-	}
-
-	DB = db
-	return nil
-}
 
 // My struct that uses "playerdata.db" file
 type Player struct {

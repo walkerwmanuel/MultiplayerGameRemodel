@@ -2,12 +2,11 @@ package main
 
 import (
 	"multiplayergame/myroutes"
-	"multiplayergame/players"
 )
 
 func main() {
 
-	err := players.ConnectDatabase()
+	err := myroutes.ConnectDatabase()
 	myroutes.CheckErr(err)
 
 	myroutes.Routes()
