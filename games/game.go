@@ -13,21 +13,22 @@ var DB *sql.DB
 // SqliteDB is the db object for sqlite database connections
 var SqliteDB *sql.DB
 
-func sqliteCreateTable(tableName string) error {
+// func sqliteCreateTable(tableName string) error {
 
-	statement, err := SqliteDB.Prepare("CREATE TABLE IF NOT EXISTS " + tableName + " (key TEXT NOT NULL UNIQUE PRIMARY KEY, value TEXT)")
-	if err != nil {
-		return err
-	}
+// 	statement, err := SqliteDB.Prepare("CREATE TABLE IF NOT EXISTS " + tableName + " (key TEXT NOT NULL UNIQUE PRIMARY KEY, value TEXT)")
+// 	if err != nil {
+// 		return err
+// 	}
 
-	defer statement.Close()
-	_, err = statement.Exec()
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// 	defer statement.Close()
+// 	_, err = statement.Exec()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
+// Function to open database file
 func ConnectDatabase() error {
 	db, err := sql.Open("sqlite3", "./data.db")
 	if err != nil {
@@ -45,7 +46,7 @@ func AddGame(newGame Game) (bool, error) {
 		return false, err
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO games (players) VALUES (?)")
+	stmt, err := tx.Prepare("INSERT INTO games (pot) VALUES (?)")
 
 	if err != nil {
 		fmt.Println("Error!")
@@ -54,7 +55,35 @@ func AddGame(newGame Game) (bool, error) {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(newGame.Players)
+	_, err = stmt.Exec(newGame.Pot)
+
+	if err != nil {
+		fmt.Println("Error2!")
+		return false, err
+	}
+
+	tx.Commit()
+
+	return true, nil
+}
+
+func AddPlayerToGame(gameid string, id string) (bool, error) {
+
+	tx, err := DB.Begin()
+	if err != nil {
+		return false, err
+	}
+
+	stmt, err := tx.Prepare("INSERT INTO games (players) SELECT id FROM people WHERE id = ?")
+
+	if err != nil {
+		fmt.Println("Error!")
+		return false, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(gameid)
 
 	if err != nil {
 		fmt.Println("Error2!")
@@ -69,7 +98,7 @@ func AddGame(newGame Game) (bool, error) {
 func GetGame(count int) ([]Game, error) {
 
 	//Simple seledt statement with a LIMIT appended to it
-	rows, err := DB.Query("SELECT id, name, password, coins from people LIMIT" + strconv.Itoa(count))
+	rows, err := DB.Query("SELECT id, pot, players from games LIMIT" + strconv.Itoa(count))
 
 	if err != nil {
 		return nil, err
@@ -83,7 +112,7 @@ func GetGame(count int) ([]Game, error) {
 	for rows.Next() {
 		//Create an instance of player struct
 		singleGame := Game{}
-		err = rows.Scan(&singleGame.Id, &singleGame.Players)
+		err = rows.Scan(&singleGame.Id, &singleGame.Pot, &singleGame.Players)
 
 		if err != nil {
 			return nil, err

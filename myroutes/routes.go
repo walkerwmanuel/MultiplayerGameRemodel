@@ -28,8 +28,9 @@ func Routes() {
 
 	gLogic := r.Group("/api/gLogic")
 	{
-		gLogic.POST("addGame", addGame)
+		gLogic.PUT("addPlayertoGame/:gameid/:playerid", addPlayerToGame)
 		gLogic.GET("getGame", getGame)
+		gLogic.POST("addGame", addGame)
 	}
 
 	cLogic := r.Group("/api/cLogic")
@@ -45,6 +46,7 @@ func Routes() {
 func addGame(c *gin.Context) {
 
 	//Creates instance of Player struct and names is json
+
 	var json games.Game
 
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -53,6 +55,28 @@ func addGame(c *gin.Context) {
 	}
 
 	success, err := games.AddGame(json)
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{"message": "Success"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+}
+
+func addPlayerToGame(c *gin.Context) {
+
+	//Creates instance of Player struct and names is json
+	gameid := c.Param("gameid")
+	id := c.Param("id")
+
+	var json games.Game
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	success, err := games.AddPlayerToGame(gameid, id)
 
 	if success {
 		c.JSON(http.StatusOK, gin.H{"message": "Success"})
