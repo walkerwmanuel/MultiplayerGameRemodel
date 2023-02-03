@@ -3,14 +3,13 @@ package players
 import (
 	"database/sql"
 	"fmt"
+	"multiplayergame/data"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 const PlayerTableName = "players"
-
-var DB *sql.DB
 
 // Function to open database file
 
@@ -26,7 +25,7 @@ type Player struct {
 func GetPersons(count int) ([]Player, error) {
 
 	//Simple seledt statement with a LIMIT appended to it
-	rows, err := DB.Query("SELECT id, name, password, coins from people LIMIT" + strconv.Itoa(count))
+	rows, err := data.DB.Query("SELECT id, name, password, coins from people LIMIT" + strconv.Itoa(count))
 
 	if err != nil {
 		return nil, err
@@ -64,7 +63,7 @@ func GetPersonById(id string) (Player, error) {
 
 	//Prepares for the QueryRow func
 	//Important to prepare before QueryRow to check for error before sql func is called
-	stmt, err := DB.Prepare("SELECT id, name, password, coins from people WHERE id = ?")
+	stmt, err := data.DB.Prepare("SELECT id, name, password, coins from people WHERE id = ?")
 
 	if err != nil {
 		return Player{}, err
@@ -88,7 +87,7 @@ func GetPersonById(id string) (Player, error) {
 // Function to add to database
 func AddPerson(newPerson Player) (bool, error) {
 
-	tx, err := DB.Begin()
+	tx, err := data.DB.Begin()
 	if err != nil {
 		return false, err
 	}
@@ -116,7 +115,7 @@ func AddPerson(newPerson Player) (bool, error) {
 
 func UpdatePerson(ourPlayer Player) (bool, error) {
 
-	tx, err := DB.Begin()
+	tx, err := data.DB.Begin()
 	if err != nil {
 		return false, err
 	}
@@ -143,13 +142,13 @@ func DeletePerson(playerId int) (bool, error) {
 
 	fmt.Printf("Deleting player Id %d\n", playerId)
 
-	tx, err := DB.Begin()
+	tx, err := data.DB.Begin()
 
 	if err != nil {
 		return false, err
 	}
 
-	stmt, err := DB.Prepare("DELETE from people where id = ?")
+	stmt, err := data.DB.Prepare("DELETE from people where id = ?")
 
 	if err != nil {
 		return false, err

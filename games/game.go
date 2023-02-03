@@ -1,17 +1,14 @@
 package games
 
 import (
-	"database/sql"
 	"fmt"
+	"multiplayergame/data"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3" //Need to blank import package
 )
 
-var DB *sql.DB
-
 // SqliteDB is the db object for sqlite database connections
-var SqliteDB *sql.DB
 
 // func sqliteCreateTable(tableName string) error {
 
@@ -32,7 +29,7 @@ var SqliteDB *sql.DB
 
 func AddGame(newGame Game) (bool, error) {
 
-	tx, err := DB.Begin()
+	tx, err := data.DB.Begin()
 	if err != nil {
 		return false, err
 	}
@@ -60,7 +57,7 @@ func AddGame(newGame Game) (bool, error) {
 
 func AddPlayerToGame(gameid string, id string) (bool, error) {
 
-	tx, err := DB.Begin()
+	tx, err := data.DB.Begin()
 	if err != nil {
 		return false, err
 	}
@@ -89,7 +86,7 @@ func AddPlayerToGame(gameid string, id string) (bool, error) {
 func GetGame(count int) ([]Game, error) {
 
 	//Simple seledt statement with a LIMIT appended to it
-	rows, err := DB.Query("SELECT id, pot, players from games LIMIT" + strconv.Itoa(count))
+	rows, err := data.DB.Query("SELECT id, pot, players from games LIMIT" + strconv.Itoa(count))
 
 	if err != nil {
 		return nil, err

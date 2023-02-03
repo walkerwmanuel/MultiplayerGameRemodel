@@ -1,7 +1,6 @@
 package myroutes
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"multiplayergame/cardLogic"
@@ -42,18 +41,6 @@ func Routes() {
 	// By default it serves on :8080 unless a
 	// PORT environment variable was defined.
 	r.Run()
-}
-
-var DB *sql.DB
-
-func ConnectDatabase() error {
-	db, err := sql.Open("sqlite3", "./data.db")
-	if err != nil {
-		return err
-	}
-
-	DB = db
-	return nil
 }
 
 func addGame(c *gin.Context) {
