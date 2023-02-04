@@ -31,6 +31,7 @@ func Routes() {
 		gLogic.PUT("addPlayertoGame/:gameid/:playerid", addPlayerToGame)
 		gLogic.GET("getGame", getGame)
 		gLogic.POST("addGame", addGame)
+		gLogic.DELETE("deleteGame/:id", deleteGame)
 	}
 
 	cLogic := r.Group("/api/cLogic")
@@ -94,6 +95,26 @@ func getGame(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{"data": games})
+	}
+}
+
+func deleteGame(c *gin.Context) {
+
+	//Sets the id web input to "gameId" variable
+	gameId, err := strconv.Atoi(c.Param("id"))
+
+	//Checks for error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	}
+
+	//Calls DeletePerson function with respect to personId
+	success, err := games.DeleteGame(gameId)
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{"message": "Success"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 }
 

@@ -117,3 +117,32 @@ func GetGame(count int) ([]Game, error) {
 
 	return game, err
 }
+
+func DeleteGame(gameId int) (bool, error) {
+
+	fmt.Printf("Deleting player Id %d\n", gameId)
+
+	tx, err := data.DB.Begin()
+
+	if err != nil {
+		return false, err
+	}
+
+	stmt, err := data.DB.Prepare("DELETE from games where id = ?")
+
+	if err != nil {
+		return false, err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(gameId)
+
+	if err != nil {
+		return false, err
+	}
+
+	tx.Commit()
+
+	return true, nil
+}
